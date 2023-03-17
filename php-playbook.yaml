@@ -1,0 +1,16 @@
+---
+- hosts: dev 
+  tasks:
+         - name: Get file name from latest commit from git 
+           local_action: shell git show --pretty="" --name-only HEAD
+           register: file_list
+           
+         - name: DEbug file names
+           debug: 
+               var: file_list
+
+         - name: Update the file to php server 
+           copy: 
+               src: "{{ item }}"
+               dest: "/home/rocky/public_html/php-demo/{{ item }}"
+           loop: "{{ file_list.stdout_lines }}"
